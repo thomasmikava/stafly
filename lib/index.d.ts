@@ -15,7 +15,7 @@ declare type AnyKeyReducerObject<Key, Value> = {
     [reducer in string]?: (key: Key, state: Value, ...params: any[]) => Value;
 };
 declare type AnyElementReducerObject<Value> = AnyKeyReducerObject<KeyOf<Value>, ValueOnKey<Value, KeyOf<Value>>>;
-interface CreateSingleStafly<AdditionalSettings extends AnyObject = {}> {
+interface CreateStaflyStore<AdditionalSettings extends AnyObject = {}> {
     <Value, SetterParams extends any[] = []>(): EmptyObject extends AdditionalSettings ? SingleStafly<Value | DefaultValue, EmptyObject, SetterParams> : "Warning: creating `Stafly` without arguments is isDisabled. Please, pass an object as an argument";
     <Value, SetterParams extends any[] = []>(args: {
         defaultValue: Value | (() => Value);
@@ -28,13 +28,13 @@ export interface StaflyCommonOptions<Value = any> {
     equalityFn?: (value1: Value, value2: Value) => boolean;
     ignoreMultipleSettersError?: boolean;
 }
-export declare const createStafly: CreateSingleStafly;
+export declare const createStore: CreateStaflyStore;
 export declare const staflyFactory: <AdditionalSettings extends AnyObject = {}>(settings: {
-    setterModifier?: ((fn: (state: any) => any, additionalOptions: AdditionalSettings) => (state: any) => any) | undefined;
+    setterModifier?: ((fn: (state: any) => any, additionalOptions: AdditionalSettings & StaflyCommonOptions<any>) => (state: any) => any) | undefined;
     options?: StaflyCommonOptions<any> | undefined;
-    onAfterCreation?: ((stafly: AnyStafly, additionalOptions: AdditionalSettings) => void) | undefined;
+    onAfterCreation?: ((stafly: AnyStafly, additionalOptions: AdditionalSettings & StaflyCommonOptions<any>) => void) | undefined;
     modifyOptions?: ((combinedOptions: AdditionalSettings & StaflyCommonOptions<any>) => AdditionalSettings & StaflyCommonOptions<any>) | undefined;
-}) => CreateSingleStafly<AdditionalSettings>;
+}) => CreateStaflyStore<AdditionalSettings>;
 declare type ElementEqualityFn<Value> = ElementEqualityFnHelper<ValueOnKey<Value, KeyOf<Value>>, KeyOf<Value>>;
 declare type ElementEqualityFnHelper<Value, Key> = (value1: Value, value2: Value, key: Key) => boolean;
 declare type DefaultValue = undefined;

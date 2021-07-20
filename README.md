@@ -5,9 +5,9 @@ Stafly is a state management tool for react
 Let's start with a **global state**.
 
 ```ts
-import { createStafly } from "stafly";
+import { createStore } from "stafly";
 
-const NameStore = createStafly<string>();
+const NameStore = createStore<string>();
 
 const Ancenstor = props => {
   const name = NameStore.useValue();
@@ -25,11 +25,11 @@ const Descendant = props => {
 
 ```
 Done!
-We can get or set value from any component
+We can get or set value from any component, either from up, down, or non-related components too
 
-<br /><br />
+<br />
 
-You might not need global state is some cases (for example, if we use Ancestor component at sveeral places), so sometimes we need to limit our flight. They say, sky is the limit, so let's wrap our Ancestor component
+You might not need a global state is some cases (for example, if we use Ancestor component at several places), so sometimes we need to limit our flight. They say, sky is the limit, so let's wrap our Ancestor component
 
 
 ```ts
@@ -38,14 +38,14 @@ const Ancenstor = staflySky(NameStore)(props => {
 });
 ```
 
-That's it! Now we can render Ancenstor at multiple places and they will have separate states.  No more singleton.
+That's it! Now we can render Ancenstor at multiple places and they will have separate states.  No more singleton; however, keep in mind that if you use use stores in hierarchically higher places than components that are wrapped in sky, you will access global state there.
 
 You can pass multiple stores to staflySky function.
 You can use `staflySky.memo` instead of `staflySky` to memoize component, just as `React.memo` would do.
 
+<br />
 
-Sometimes we might not neet to have up to date value of the store, but just access it whenever needed.
-
+Sometimes we might not need to have an up-to-date value of the store, but just access it whenever needed. In this case, Ancestor will not rerender on every change of value.
 ```ts
 const Ancenstor = staflySky.memo(NameStore)(props => {
   const getName = NameStore.useValueGetterFn();
@@ -58,7 +58,6 @@ const Ancenstor = staflySky.memo(NameStore)(props => {
   // rest component...
 
 ```
-In this case, Ancestor will not rerender on every change of value.
 
 You can get setter function too 
 ```ts
@@ -140,4 +139,4 @@ const Descendant = props => {
 In this case, you will no longer have up to date value in the store, but when requested by value getter function, registered setter function will be called and you will get newest data. The value in the store will be updated too.
 
 
-For advanced uses, such as accessing and modifying global state outside components, persisting state, using `immer`, gathering data from multiple places and more, please see the rest of the documentation here.
+For advanced uses, such as accessing and modifying global state outside components, persisting global state, using `immer`, collecting data from multiple places and more, please see the rest of the documentation here.

@@ -71,7 +71,7 @@ type AnyElementReducerObject<Value> = AnyKeyReducerObject<
   ValueOnKey<Value, KeyOf<Value>>
 >;
 ///
-interface CreateSingleStafly<AdditionalSettings extends AnyObject = {}> {
+interface CreateStaflyStore<AdditionalSettings extends AnyObject = {}> {
   <
     Value,
     SetterParams extends any[] = []
@@ -99,7 +99,7 @@ export interface StaflyCommonOptions<Value = any> {
 
 //
 
-export const createStafly: CreateSingleStafly = (options?: any): any => {
+export const createStore: CreateStaflyStore = (options?: any): any => {
   if (!options) options = {};
   return createSingleStafly({ ...options });
 };
@@ -109,23 +109,23 @@ export const staflyFactory = <
 >(settings: {
   setterModifier?: (
     fn: (state: any) => any,
-    additionalOptions: AdditionalSettings
+    additionalOptions: AdditionalSettings & StaflyCommonOptions
   ) => (state: any) => any;
   options?: StaflyCommonOptions;
   onAfterCreation?: (
     stafly: AnyStafly,
-    additionalOptions: AdditionalSettings
+    additionalOptions: AdditionalSettings & StaflyCommonOptions
   ) => void;
   modifyOptions?: (
     combinedOptions: AdditionalSettings & StaflyCommonOptions
   ) => AdditionalSettings & StaflyCommonOptions;
-}): CreateSingleStafly<AdditionalSettings> => {
+}): CreateStaflyStore<AdditionalSettings> => {
   return ((options) => {
     let combinedOptions = { ...(settings.options || {}), ...options };
     if (settings.modifyOptions) {
       combinedOptions = settings.modifyOptions(combinedOptions);
     }
-    const stafly = createStafly(combinedOptions);
+    const stafly = createStore(combinedOptions);
     if (settings.onAfterCreation) {
       settings.onAfterCreation(stafly, { ...combinedOptions });
     }
@@ -133,10 +133,8 @@ export const staflyFactory = <
   }) as any;
 };
 
-const logger = console.log;
-
 const throwMultipleSettersError = () => {
-  throw new Error("StaflyMultipleSettersError: more than 1 value setter is attached to stafly store");
+  throw new Error("StaflyMultipleSettersError: more than 1 value setter is attached to stafly store. If you're absolutely sure to ignore this error, pass `{ ignoreMultipleSettersError: true }` to `createStore`");
 };
 
 interface MiniContextSubscraberValue<Data extends readonly any[]> {
@@ -232,7 +230,6 @@ const getHelperHooks = <
     }
     const newValueFnRef = useRef(() => newValueRef.current);
     useLayoutEffect(() => {
-      console.log("internal.updateValue B");
       internal.updateValue(newValue);
       newValueRef.current = newValue;
     });
@@ -262,7 +259,6 @@ const getHelperHooks = <
           const modifiedReducer = getModifiedReducer(vl as any, [], options);
           vl = modifiedReducer(internal.getLatestValue()[0]);
         }
-        console.log("internal.updateValue C");
         internal.updateValue(vl as Value);
       },
       [internal]
@@ -331,7 +327,6 @@ const getValueHelper = <Value, SetterParams extends any[]>(
   }
   if (values.length > 0) {
     const value = values[0];
-    console.log("internal.updateValue A");
     internal.updateValue(value);
     return value;
   }
@@ -393,7 +388,6 @@ const getHelperGlobals = <
     if (typeof newValue === "function") {
       val = getModifiedReducer(val as any, [], options)(newValue as Value);
     }
-    console.log("internal.updateValue D");
     getGlobalContextValue().internal.updateValue(val);
   };
 
@@ -981,7 +975,6 @@ const createReducer = <Value>(
       subReducerInfo
     );
     const newValue = modifiedReducer(currentValue);
-    console.log("internal.updateValue F", newValue);
     internal.updateValue(newValue);
     return internal.getLatestValue();
   };
