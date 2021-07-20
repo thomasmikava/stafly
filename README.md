@@ -139,4 +139,4 @@ const Descendant = props => {
 In this case, you will no longer have up to date value in the store, but when requested by value getter function, registered setter function will be called and you will get newest data. The value in the store will be updated too.
 
 
-For advanced uses, such as accessing and modifying global state outside components, persisting global state, using `immer`, collecting data from multiple places and more, please see the rest of the documentation here.
+For advanced uses, such as accessing and modifying global state outside components, persisting global state, using `immer`, collecting data from multiple places and more, please see the rest of the documentation [here](https://github.com/thomasmikava/stafly/blob/master/API.md).

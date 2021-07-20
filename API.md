@@ -113,8 +113,6 @@ Same goes to reducers. setterModifier will affect there too.
 
 </details>
 
-</details>
-
 <details>
   <summary>Collecting data from multiple places</summary>
 
@@ -122,7 +120,7 @@ You might have an array of uncontrollable components and need to collect data fr
 ```ts
 import { createStore } from "stafly";
 
-const NamesStore = createStore({
+const NameStore = createStore({
   defaultValue: [] as string[],
 }).asArray();
 
@@ -146,7 +144,7 @@ Now, if you want to use object instead of `asArray`, you `asMultiKey`:
 
 ```ts
 
-const NamesStore = createStore({
+const NameStore = createStore({
   defaultValue: {} as Record<string, string>,
 }).asMultiKey();
 ```
@@ -183,4 +181,62 @@ const Item = ({ index }) => {
 
   // rest component...
 ```
+<br />
+
+If you want to do the same from Ancestor,
+
+```ts
+const Ancenstor = staflySky(NameStore)(props => {
+  const getFunctionsByIndex = NameStore.useKeyFunctionsGetter();
+
+  const handleAddingDollarSign = (index: number) => {
+    getFunctionsByIndex(index).dispatch("addSuffix")("$");
+  }
+
+  // rest component...
+});
+```
+
+Or in case of global function,
+
+```ts
+
+const handleAddingDollarSign = (index: number) => {
+  NameStore.onGlobalKey(index).dispatch("addSuffix")("$");
+}
+```
+
+<br />
+
+And one more thing.
+Sometimes you might prefer to pass the hooks directly to child components for achieving more abstract code.
+
+```tsx
+const Parent = staflySky(NameStore)(props => {
+  const [itemsCount, setItemsCount] = useState(1);
+
+  const getHooksByIndex = NameStore.useKeyHooksGetter();
+
+  return (
+    <div>
+      {new Array.fill(itemsCount).fill(0).map((_, index) => (
+          <Child hooks={getHooksByIndex(index)} />
+      ))}
+    </div>
+  );
+});
+
+const Child = ({ hooks }) => {
+  const [name, setName] = useState("");
+
+  hooks.useSetValue(name);
+
+  const addSuffix = hooks.useDispatcher("addSuffix");
+  
+  const addDollarSign = () => handleAddPrefix("$");
+
+  // rest component...
+};
+```
+
 </details>
