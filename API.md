@@ -129,7 +129,7 @@ const NameStore = createStore({
 Then, in the children, you can use all the hooks by index
 
 ```ts
-const Descendant = ({ index }) => {
+const Item = ({ index }) => {
   const [name, setName] = useState("");
 
   NameStore.useKey(index).useSetValue(name);
@@ -138,9 +138,9 @@ const Descendant = ({ index }) => {
 
 ```
 
-That's it! Whenever you will try to get the value from the store, you will get it!
+That's it! Whenever you will try to get the value from the store, you will get an array, which consists of values received from `Item` components.
 
-Now, if you want to use object instead of `asArray`, you `asMultiKey`:
+Now, if you want to use an object instead of an array, use `asMultiKey`:
 
 ```ts
 
