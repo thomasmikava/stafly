@@ -40,6 +40,7 @@ declare type ElementEqualityFnHelper<Value, Key> = (value1: Value, value2: Value
 declare type DefaultValue = undefined;
 export interface StaflyCommonHooks<Value, Reducers extends AnyReducerObject<Value> | AnyKeyReducerObject<any, any> = EmptyObject, AreReducersTopLevel extends boolean = true, SetterParams extends any[] = []> {
     useValue: () => Value;
+    useState: () => readonly [Value, SetterFn<Value>];
     useValueGetterFn: () => (...params: SetterParams) => Value;
     useSetValue: SingleSetValue<Value>;
     useValueSetterFn: () => SetterFn<Value>;

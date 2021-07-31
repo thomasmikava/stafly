@@ -121,7 +121,7 @@ export const staflyFactory = <
   ) => AdditionalSettings & StaflyCommonOptions;
 }): CreateStaflyStore<AdditionalSettings> => {
   return ((options) => {
-    let combinedOptions = { ...(settings.options || {}), ...options };
+    let combinedOptions = { ...(settings.options || {}), ...options, setterModifier: (settings.setterModifier || options.setterModifier) };
     if (settings.modifyOptions) {
       combinedOptions = settings.modifyOptions(combinedOptions);
     }
@@ -298,9 +298,12 @@ const getHelperHooks = <
     );
   };
 
+  const useState = () => [useValue(), useValueSetterFn()] as const;
+
   return {
     useSelector,
     useValue,
+    useState,
     useValueGetterFn,
     useSetValue,
     useRegisterValueSetter,
@@ -1010,6 +1013,7 @@ export interface StaflyCommonHooks<
   SetterParams extends any[] = []
 > {
   useValue: () => Value;
+  useState: () => readonly [Value, SetterFn<Value>];
   useValueGetterFn: () => (...params: SetterParams) => Value;
   useSetValue: SingleSetValue<Value>;
   useValueSetterFn: () => SetterFn<Value>;

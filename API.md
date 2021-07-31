@@ -42,7 +42,7 @@ Somehwere in your file write
 import { staflyFactory, AnyStafly } from "stafly";
 
 export const createCustomStaflyStore = staflyFactory({
-  onAfterCreation: (stafly, options: { storageKey?: string }) => { // we can receive custom options when stafly store will be created. Let's receive storageKey and make it optional
+  onAfterCreation: (stafly, options: { storageKey?: string }) => { // we can receive custom options when stafly store will be created. Let's receive `storageKey` (you can name it anything) and make it optional
     if (options.storageKey) persistState(stafly, options.storageKey);
     // you can have other side effects too
   },

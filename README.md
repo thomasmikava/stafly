@@ -122,7 +122,7 @@ const Ancestor = props => {
     // rest component...
 ```
 
-If you are saving complex and/or fast changing data in the store, sometimes you might not want to have up to date information for optimization purposes.
+If you are saving complex and/or fast changing data in the store, sometimes you might not want to have up-to-date information for optimization purposes.
 You can not only get data when needed, but also set data in the store when requested.
 For that, you can register setter on the store.
 
@@ -136,7 +136,7 @@ const Descendant = props => {
   return <input defaultValue="" ref={inputRef} />
 ```
 
-In this case, you will no longer have up to date value in the store, but when requested by value getter function, registered setter function will be called and you will get newest data. The value in the store will be updated too.
+In this case, you will no longer have up-to-date value in the store, but when requested by value getter function, registered setter function will be called and you will get newest data. The value in the store will be updated too.
 
 
 For advanced uses, such as accessing and modifying global state outside components, persisting global state, using `immer`, collecting data from multiple places and more, please see the rest of the documentation [here](https://github.com/thomasmikava/stafly/blob/master/API.md).
